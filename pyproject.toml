@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling",
+            "beautifulsoup4",
+            "requests"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pyscrelp"
+version = "0.0.1"
+authors = [
+  { name="Cameron Moy", email="moycam@umich.edu"},
+]
+description = "A package for collecting Yelp reviews."
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/cmoy11/pyscrelp"
