@@ -3,7 +3,7 @@
 
 By [@cmoy11](https://github.com/cmoy11)
 
-This code was originally developed in collaboration with the Race and Data Lab and Dr. Matthew Bui at the University of Michigan School of Information. I have since repurposed this code for simple Yelp review scraping! Simply input a list of Yelp aliases (more on that later) and receive comprehensive csv files containing these businesses' reviews, date reviewed, and star rating.
+This code was originally developed in collaboration with the RAD (Race & Data) Justice Lab and Dr. Matthew Bui at the University of Michigan School of Information. I have since repurposed this code for simple Yelp review scraping! Input a list of Yelp aliases (more on that later) and receive comprehensive csv files containing these businesses' review data (including raw text, dates, and star rating).
 
 **Installation**
 
