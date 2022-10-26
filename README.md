@@ -7,7 +7,7 @@ This code was originally developed in collaboration with the Race and Data Lab a
 
 **Installation**
 
-```pip install pyscrelp```
+```pip install -i https://test.pypi.org/simple/ pyscrelp==0.0.1```
 
 **requirements**
 
