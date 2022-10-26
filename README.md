@@ -3,7 +3,7 @@
 
 By [@cmoy11](https://github.com/cmoy11)
 
-This code was originally developed in collaboration with the RAD (Race & Data) Justice Lab and Dr. Matthew Bui at the University of Michigan School of Information. I have since repurposed this code for simple Yelp review scraping! Input a list of Yelp aliases (more on that later) and receive comprehensive csv files containing these businesses' review data (including raw text, dates, and star rating).
+This code was originally developed in collaboration with the RAD (Race & Data) Justice Lab and Dr. Matthew Bui at the [University of Michigan School of Information](https://www.si.umich.edu/). I have since repurposed this code for simple Yelp review scraping! Input a list of Yelp aliases (more on that later) and receive comprehensive csv files containing these businesses' review data (including raw text, dates, and star rating).
 
 **Installation**
 
@@ -56,6 +56,6 @@ If you see this on the other hand:
 ![image](images/troubleshooting.png)
 You are out of luck :/ Yelp has caught you and you have no choice but to wait until you are unblocked. Hopefully you have some coworkers who want thousands of reviews on their computer?
 
-**Diclaimer**
+**Disclaimer**
 
 This program may stop working suddenly if Yelp changes their website structure (they have already done this once, I like to think because of me). I will do my best to stay on top of this, but you were warned.
