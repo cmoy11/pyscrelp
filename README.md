@@ -24,11 +24,11 @@ import pyscrelp as pyscr
 
 To generate csv files for a list of businesses:
 ```python
-pyscr.get_reviews(['green-dot-stables-detroit-2', 'brew-detroit-detroit'])
+pyscr.write_review_files(['green-dot-stables-detroit-2', 'brew-detroit-detroit'])
 ```
 *Note:*
 
-get_reviews() takes a list of Yelp aliases as its only parameter and does not return a value. CSV files are generated and non-valid businesses are printed in the terminal.
+write_review_files() takes a list of Yelp aliases as its only parameter and does not return a value. CSV files are generated and non-valid businesses are printed in the terminal.
 
 *What is a Yelp alias?*
 
