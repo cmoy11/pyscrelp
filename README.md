@@ -30,6 +30,10 @@ pyscr.write_review_files(['green-dot-stables-detroit-2', 'brew-detroit-detroit']
 
 write_review_files() takes a list of Yelp aliases as its only parameter and does not return a value. CSV files are generated and non-valid businesses are printed in the terminal.
 
+*Additional Note:*
+
+CSV files are only written after ALL the reviews are collected. Make sure you have enough time to scrape all the restaurants listed before running or you will lose your progress.
+
 *What is a Yelp alias?*
 
 The Yelp alias is the unique tag following "https://www.yelp.com/biz/". It can be identified here "https://www.yelp.com/biz/brew-detroit-detroit" as "brew-detroit-detroit".
