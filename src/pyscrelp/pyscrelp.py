@@ -44,10 +44,10 @@ def get_reviews(restaurants):
             print(f"{restaurant} is not valid")
             non_valid.append(restaurant)
             continue 
-
+        
         first_ten_stars = soup.find_all('div', class_="five-stars--regular__09f24__DgBNj")
         raw_first_ten_dates = soup.find_all('span', class_="css-chan6m")
-        num_reviews_extract = soup.find_all('span', class_='css-1fdy0l5')
+        num_reviews_extract = soup.find_all('span', class_='css-1x9ee72')
 
         # extract review dates
         first_ten_dates = []
@@ -153,4 +153,7 @@ def write_review_files(restaurants):
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(["date", "converted_date", "rating", "review"])
             for row in sorted_data:
-                csvwriter.writerow(row)
+                csvwriter.writerow(row) 
+
+# if this error: UnboundLocalError: local variable 'num_reviews' referenced before assignment
+# class names have changed. Updated BeautifulSoup lines

@@ -7,7 +7,7 @@ This code was originally developed in collaboration with the RAD (Race & Data) J
 
 **Installation**
 
-```pip install -i https://test.pypi.org/simple/ pyscrelp==0.0.2```
+```pip install -i https://test.pypi.org/simple/ pyscrelp==0.0.4```
 
 **Requirements**
 
@@ -32,7 +32,14 @@ write_review_files() takes a list of Yelp aliases as its only parameter and does
 
 *Additional Note:*
 
-CSV files are only written after ALL the reviews are collected. Make sure you have enough time to scrape all the restaurants listed before running or you will lose your progress.
+CSV files are only written after ALL the reviews are collected. Make sure you have enough time to scrape all the restaurants listed before running or you will lose your progress. I recommend implementing the following code for efficient scraping:
+
+```python
+aliases = ['green-dot-stables-detroit-2', 'brew-detroit-detroit']
+
+for alias in aliases:
+    pyscr.write_review_files([alias])
+```
 
 *What is a Yelp alias?*
 
