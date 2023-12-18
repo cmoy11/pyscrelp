@@ -3,7 +3,7 @@
 
 By [@cmoy11](https://github.com/cmoy11)
 
-This code was originally developed in collaboration with the RAD (Race & Data) Justice Lab and Dr. Matthew Bui at the [University of Michigan School of Information](https://www.si.umich.edu/). I have since repurposed this code for simple Yelp review scraping! Input a list of Yelp aliases (more on that later) and receive comprehensive csv files containing these businesses' review data (including raw text, dates, and star rating).
+This code was origianlly developed in collaboration with the [Race and Data Justice Lab](https://www.radjusticelab.com/) and Dr. Matthew Bui at the [University of Michigan School of Information](https://www.si.umich.edu/). I have since repurposed this code for simple Yelp review scraping! Input a list of Yelp aliases (more on that later) and receive comprehensive csv files containing businesses' review data (including raw text, dates, and star rating).
 
 **Installation**
 
@@ -32,7 +32,9 @@ write_review_files() takes a list of Yelp aliases as its only parameter and does
 
 *Additional Note:*
 
-CSV files are only written after ALL the reviews are collected. Make sure you have enough time to scrape all the restaurants listed before running or you will lose your progress. I recommend implementing the following code for efficient scraping:
+CSV files are only written after ALL the reviews are collected. Make sure you have enough time to scrape all the restaurants listed before running or you will lose your progress. 
+
+Recommended implementation:
 
 ```python
 aliases = ['green-dot-stables-detroit-2', 'brew-detroit-detroit']
@@ -55,18 +57,18 @@ pyscr.hyphenate(['Green Dot Stables', 'Brew Detroit'], 'detroit')
 ```
 *Note:* 
 
-Accepts a list of businesses and a city (please hyphenate multile word cities ~ los-angeles, st-paul). This is **not** 100% accurate, but rather offers a quick way to generate the most likely alias for businesses. The only guaranteed way to find Yelp aliases is manually via [yelp.com](yelp.com) or using the [Yelp Fusion  API](https://www.yelp.com/developers/documentation/v3/get_started). Be sure to check the not-valid print statement in the terminal if you choose to use the hyphenate function.
+Accepts a list of businesses and a city (please hyphenate multile word cities ~ los-angeles, st-paul). This is **not** 100% accurate, but rather a quick method for generating the most likely alias for businesses. The only guaranteed way to find Yelp aliases is manually via [yelp.com](yelp.com) or using the [Yelp Fusion  API](https://www.yelp.com/developers/documentation/v3/get_started). Be sure to check the not-valid print statement in the terminal if you choose to use the hyphenate function.
 
 **Troubleshooting**
 
-Surprise surprise, Yelp does not like mass scraping from their website. I have time.sleep()s scattered throughout the program to try and mitigate this, but if you are scraping hundreds of thousands of Yelp reviews like I have, you will likely run into issues with the Yelp server. Here are some, not so helpful tips! 
+Rate limiting continues to be an issue. I have time.sleep()s scattered throughout the program to try and mitigate this, but if you are scraping hundreds of thousands of Yelp reviews like I have, you will likely run into issues with the Yelp server. Here are some helpful tips! 
 
 The first roadblock you will likely hit is the recaptcha. If your code stops working all of the sudden, try going to yelp.com. If you see the recaptcha, proceed through the recaptcha and continue scraping!
 
 If you see this on the other hand:
 ![image](images/troubleshooting.png)
-You are out of luck :/ Yelp has caught you and you have no choice but to wait until you are unblocked. Hopefully you have some coworkers who want thousands of reviews on their computer?
+You are out of luck :/ and you'll have to wait until you are unblocked.
 
 **Disclaimer**
 
-This program may stop working suddenly if Yelp changes their website structure (they have already done this once, I like to think because of me). I will do my best to stay on top of this, but you were warned.
+Yelp continues to change the structure of their sites, so this program may suddenly stop working. I try to stay on top of updates, but feel free to shoot me a message if you are having difficulties.
