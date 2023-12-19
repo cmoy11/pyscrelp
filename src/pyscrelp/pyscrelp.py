@@ -142,8 +142,3 @@ def write_review_files(restaurants):
 
 # if this error: UnboundLocalError: local variable 'num_reviews' referenced before assignment
 # class names have changed. Updated BeautifulSoup lines
-
-aliases = ['detroit-pizza-factory-dearborn-heights-3']
-
-for alias in aliases:
-    write_review_files([alias])
