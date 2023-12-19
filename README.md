@@ -7,7 +7,7 @@ This code was origianlly developed in collaboration with the [Race and Data Just
 
 **Installation**
 
-```pip install -i https://test.pypi.org/simple/ pyscrelp==0.0.4```
+```pip install -i https://test.pypi.org/simple/ pyscrelp==0.0.5```
 
 **Requirements**
 
