@@ -8,7 +8,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pyscrelp"
-version = "2.0.1"
+version = "2.0.2"
 authors = [
   { name="Cameron Moy", email="moycam@umich.edu"},
 ]

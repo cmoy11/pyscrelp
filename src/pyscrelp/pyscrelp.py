@@ -54,7 +54,6 @@ def collect_reviews(soup, filename, restaurant):
         'elite': elite,
         'review': first_ten_reviews
     }
-    print(review_d)
     df = pd.DataFrame(review_d, columns=list(review_d.keys()))
     df['restaurant'] = restaurant
     df.to_csv(filename, mode='a', header=False, index=False)
