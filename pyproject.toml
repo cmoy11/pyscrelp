@@ -1,12 +1,14 @@
 [build-system]
 requires = ["hatchling",
             "beautifulsoup4",
-            "requests"]
+            "requests",
+            "datetime",
+            "pandas"]
 build-backend = "hatchling.build"
 
 [project]
 name = "pyscrelp"
-version = "0.0.5"
+version = "2.0.1"
 authors = [
   { name="Cameron Moy", email="moycam@umich.edu"},
 ]

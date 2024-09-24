@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup
 from pyparsing import alphas
 import requests
 import re
-import csv
 from datetime import datetime
+import pandas as pd
 
 def hyphenate(restaurants, city):
     hyphen_restaurants = []
@@ -16,129 +16,97 @@ def hyphenate(restaurants, city):
                 str += "-"
             elif char == "&":
                 str += "and"
-        str += f"-{city}"
+        str += f"-{city.lower().replace(' ', '-').replace('.', '')}"
         hyphen_restaurants.append(str)
     print('done hyphenating')
     return hyphen_restaurants
 
-def get_reviews(restaurants):
-    non_valid = []
-    reviews = {}
+def collect_reviews(soup, filename, restaurant):    
+    stars_regex = r"(\d) star rating"
+    dates_regex = r"([A-Z][a-z]{2}\s\d+,\s\d{4})"
+
+    # extract comments, ratings, and review count from the restaurant's main Yelp page
+    first_ten = soup.find_all('p', class_="comment__09f24__D0cxf")
+    first_ten = [comment for comment in first_ten if 'truncated__09f24__IiW9r' not in comment.get('class', [])]
+    first_ten_reviews = [review.text.strip().replace('¬†', '').replace(' \xa0', ' ') for review in first_ten]
+    
+    first_ten_stars_raw = soup.find_all('div', class_="y-css-1gng1og")
+    first_ten_stars_raw = [str(comment) for comment in first_ten_stars_raw]
+    filtered_stars = [star for star in first_ten_stars_raw if 'Previous review' not in star]
+    first_ten_stars = [re.search(stars_regex, text).group(1) for text in filtered_stars if re.search(stars_regex, text)]        
+    first_ten_dates = [re.search(dates_regex, text).group(1) for text in filtered_stars if re.search(dates_regex, text)]
+
+    first_ten_reviewers = soup.find_all('div', class_="user-passport-info")
+    if len(first_ten_reviewers) > len(first_ten_dates):
+        first_ten_reviewers = first_ten_reviewers[1:]
+    names = [link.text for reviewer in first_ten_reviewers for link in reviewer.find_all('a', class_='y-css-12ly5yx')]
+    locations = [link.text for reviewer in first_ten_reviewers for link in reviewer.find_all('span', class_='y-css-h9c2fl')]
+    elite = [1 if re.search('elite-badge', str(reviewer)) else 0 for reviewer in first_ten_reviewers]
+
+
+    # builds a dictionary for the first 10 reviews
+    review_d = {
+        'date': [datetime.strptime(original_date_str, "%b %d, %Y") for original_date_str in first_ten_dates],
+        'converted_date': [datetime.strptime(original_date_str, "%b %d, %Y").strftime("%m/%d/%Y") for original_date_str in first_ten_dates],
+        'rating': first_ten_stars,
+        'reviewer': names,
+        'location': locations,
+        'elite': elite,
+        'review': first_ten_reviews
+    }
+    print(review_d)
+    df = pd.DataFrame(review_d, columns=list(review_d.keys()))
+    df['restaurant'] = restaurant
+    df.to_csv(filename, mode='a', header=False, index=False)
+
+def get_reviews(restaurants, filename='reviews.csv', composite=False):
+    if type(restaurants) == str:
+        restaurants = [restaurants]
+
+    not_valid = []
+
     for restaurant in restaurants:
+        if not composite:
+            new_filename = restaurant + ".csv"
+        else:
+            new_filename = filename
+
         print(restaurant)
         # create the restaurant's url using the hyphenated names and provided city
         url = f"https://www.yelp.com/biz/{restaurant}"
         print(url)
         soup = BeautifulSoup(requests.get(url).text, 'html.parser')
 
-        review_information = {}
-        reviews_list = []
+        collect_reviews(soup, new_filename, restaurant)
+
         regex = r"(\d+)\sreviews"
-        regex2 = r"[A-Z][a-z]{2}\s\d+,\s\d{4}"
+        num_reviews_extract = soup.find_all('span', class_='y-css-loq5qn')
 
-        # extract comments, ratings, and review count from the restaurant's main Yelp page
-        first_ten = soup.find_all('p', class_="comment__09f24__D0cxf")
+        try:
+            reg_input = re.findall(regex, num_reviews_extract[0].text)
+            num_reviews = int(reg_input[0])
+        except:
+            print('bad url, skipping')
+            not_valid.append(restaurant)
+            continue
 
-        # skips restaurant if not in city/url does not exist
-        if first_ten == []:
-            print(f"{restaurant} is not valid")
-            non_valid.append(restaurant)
-            continue 
-        
-        first_ten_stars = soup.find_all('div', class_="css-14g69b3")
-        raw_first_ten_dates = soup.find_all('span', class_="css-chan6m")
-        num_reviews_extract = soup.find_all('span', class_='css-1x9ee72')
-
-        # extract review dates
-        first_ten_dates = []
-        for date in raw_first_ten_dates:
-            reg_input = re.findall(regex2, date.text)
-            if reg_input != []:
-                first_ten_dates.append(reg_input)
-
-        # get the number of reviews using regex expression
-        for review in num_reviews_extract:
-            reg_input = re.findall(regex, review.text)
-            if reg_input != []:
-                num_reviews = int(reg_input[0])
-                review_information['number of reviews'] = num_reviews
+        # if reg_input != []:
+        #     num_reviews = int(reg_input[0])
+        # else:
+        #     print('wrong url, skipping')
+        #     break
+            
         print(f"{restaurant} has {num_reviews} reviews") 
-
-        # builds a dictionary for the first 10 reviews
-        for i in list(range(len(first_ten))):
-            rating = first_ten_stars[i]['aria-label']
-            review = first_ten[i].text.strip()
-            review_d = {}
-            review_d['date'] = first_ten_dates[i][0]
-            review_d['rating'] = rating
-            review_d['review'] = review
-            reviews_list.append(review_d)
 
         # loops through the remaining reviews and adds to review dictionary
         counter = 10
         while num_reviews > counter:
             # time.sleep(3)
             new_url = url + f"?start={str(counter)}"
-            print(new_url)
             soup = BeautifulSoup(requests.get(new_url).text, 'html.parser')
-            next_ten = soup.find_all('p', class_="comment__09f24__D0cxf")
-            next_ten_stars = soup.find_all('div', class_="css-14g69b3")
-            raw_next_ten_dates = soup.find_all('span', class_="css-chan6m")
+            print(new_url)
+            collect_reviews(soup, new_filename, restaurant)
+            counter += 10   
 
-            next_ten_dates = []
-            for date in raw_next_ten_dates:
-                reg_input = re.findall(regex2, date.text)
-                if reg_input != []:
-                    next_ten_dates.append(reg_input)
-
-            old_reviews = 0
-            for i in range(len(next_ten)):
-                rating = next_ten_stars[i]['aria-label']
-                review = next_ten[i].text.strip()
-                review_d = {}
-                review_d['date'] = next_ten_dates[i][0]
-                review_d['rating'] = rating
-                review_d['review'] = review
-                reviews_list.append(review_d)
-
-            counter += 10
-            if old_reviews == 10:
-                break
-        review_information['Yelp user reviews'] = reviews_list
-        reviews[restaurant] = review_information
-
-    print(f"these restaurants are not valid: {non_valid}")
-    return reviews
-
-def write_review_files(restaurants):
-    reviews = get_reviews(restaurants)
-
-    for restaurant in reviews.keys():
-        all_reviews = []
-
-        for subd in reviews[restaurant]['Yelp user reviews']:
-            date = datetime.strptime(subd['date'], '%b %d, %Y') 
-            rat = int(subd['rating'][0])
-            rev = subd['review']
-            
-            # creates data list for each review
-            review_list = [date, int(rat), rev.replace('¬†', '').replace(' \xa0', ' ')]
-
-            if rev in all_reviews:
-                continue
-            else:
-                all_reviews.append(review_list)
-
-        # sorts reviews based on date
-        sorted_data = sorted(all_reviews, key = lambda x:x[1])
-
-        # writes csv file with averaged value for each restaurant
-        filename = f"{restaurant}.csv"
-        with open(filename, "w") as csvfile:
-            csvwriter = csv.writer(csvfile)
-            csvwriter.writerow(["date", "converted_date", "rating", "review"])
-            for row in sorted_data:
-                csvwriter.writerow(row) 
-
-# if this error: UnboundLocalError: local variable 'num_reviews' referenced before assignment
-# class names have changed. Updated BeautifulSoup lines
+    print("unable to collect reviews for the following businesses:", not_valid)
+    print("done")     

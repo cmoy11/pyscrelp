@@ -3,12 +3,12 @@
 
 By [@cmoy11](https://github.com/cmoy11)
 
-This code was origianlly developed in collaboration with the [Race and Data Justice Lab](https://www.radjusticelab.com/) and Dr. Matthew Bui at the [University of Michigan School of Information](https://www.si.umich.edu/). I have since repurposed this code for simple Yelp review scraping! Input a list of Yelp aliases (more on that later) and receive comprehensive csv files containing businesses' review data (including raw text, dates, and star rating).
+This code was origianlly developed in collaboration with the [Race and Data Justice Lab](https://www.radjusticelab.com/) and Dr. Matthew Bui at the [University of Michigan School of Information](https://www.si.umich.edu/). I have since repurposed this code for simple Yelp review scraping! Input a list of Yelp aliases (more on that later) and receive comprehensive csv files containing businesses' review data (including raw text, dates, and star rating, reviewer name, reviewer location, and whether a reviewer is 'elite' or not).
 
 **Installation**
 
 ``` python
-pip install -i https://test.pypi.org/simple/ pyscrelp==0.0.5
+pip install -i https://test.pypi.org/simple/ pyscrelp==2.0.1
 ```
 
 **Requirements**
@@ -17,6 +17,8 @@ Pyscrelp relies on the following packages:
 
     - BeautifulSoup
     - requests
+    - datetime
+    - pandas
 
 **Usage**
 
@@ -26,25 +28,17 @@ import pyscrelp as pyscr
 
 To generate csv files for a list of businesses:
 ```python
-pyscr.write_review_files(['green-dot-stables-detroit-2', 'brew-detroit-detroit'])
+pyscr.get_reviews(restaurants, filename='reviews.csv', composite=False)
 ```
-*Note:*
+*Parameters:*
 
-write_review_files() takes a list of Yelp aliases as its only parameter and does not return a value. CSV files are generated and non-valid businesses are printed in the terminal.
-
-*Additional Note:*
-
-CSV files are only written after ALL the reviews are collected. Make sure you have enough time to scrape all the restaurants listed before running or you will lose your progress. 
-
-Recommended implementation:
-
-```python
-aliases = ['green-dot-stables-detroit-2', 'brew-detroit-detroit']
-
-for alias in aliases:
-    pyscr.write_review_files([alias])
-```
-
+    - restaurants: str or list
+        Any single or list of Yelp aliases (more on how to find and/or generate Yelp aliases below) to scrape
+    - filename: str
+        Optional parameter, name of the output file. If you set composite to False, the individual files will automatically be named {yelp alias}.csv.
+    - composite: bool
+        Optional parameter, setting composite to True returns all reviews, across Yelp aliases, in a single csv. Keeping the parameter as False returns business pages as individual csv files (by Yelp alias).
+ 
 *What is a Yelp alias?*
 
 The Yelp alias is the unique tag following "https://www.yelp.com/biz/". It can be identified here "https://www.yelp.com/biz/brew-detroit-detroit" as "brew-detroit-detroit".
@@ -59,7 +53,7 @@ pyscr.hyphenate(['Green Dot Stables', 'Brew Detroit'], 'detroit')
 ```
 *Note:* 
 
-Accepts a list of businesses and a city (please hyphenate multile word cities ~ los-angeles, st-paul). This is **not** 100% accurate, but rather a quick method for generating the most likely alias for businesses. The only guaranteed way to find Yelp aliases is manually via [yelp.com](yelp.com) or using the [Yelp Fusion  API](https://www.yelp.com/developers/documentation/v3/get_started). Be sure to check the not-valid print statement in the terminal if you choose to use the hyphenate function.
+Accepts a list of businesses and a city. This is **not** 100% accurate, but rather a quick method for generating the most likely alias for businesses. The only guaranteed way to find Yelp aliases is manually via [yelp.com](yelp.com) or using the [Yelp Fusion  API](https://www.yelp.com/developers/documentation/v3/get_started). Be sure to check the not-valid print statement in the terminal if you choose to use the hyphenate function.
 
 **Troubleshooting**
 
